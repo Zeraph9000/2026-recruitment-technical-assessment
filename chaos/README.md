@@ -32,7 +32,28 @@ Write SQL (Postgres) `CREATE` statements to create the following schema. Be sure
 
 **Answer box:**
 ```sql
--- Create tables here
+CREATE TABLE Users (
+  id INT PRIMARY KEY
+);
+
+CREATE TABLE playlists (
+  id INT PRIMARY KEY,
+  user_id INT REFERENCES Users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE songs (
+  id INT PRIMARY KEY,
+  title TEXT NOT NULL,
+  artist TEXT NOT NULL,
+  duration INTERVAL NOT NULL
+);
+
+CREATE TABLE playlist_songs (
+  playlist_id INT REFERENCES playlists(id) ON DELETE CASCADE,
+  song_id INT REFERENCES songs(id) ON DELETE CASCADE,
+  PRIMARY KEY(playlist_id, song_id)
+);
 ```
 
 ### b)
@@ -47,5 +68,13 @@ Using the above schema, write an SQL `SELECT` query to return all songs in a pla
 
 **Answer box:**
 ```sql
--- Write query here
+SELECT
+  s.id,
+  ps.playlist_id,
+  s.title,
+  s.artist,
+  s.duration
+FROM playlist_songs ps
+JOIN songs s ON s.id = ps.song_id
+WHERE ps.playlist_id = 676767;
 ```
